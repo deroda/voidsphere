@@ -1,10 +1,10 @@
-// client/src/components/Header.js
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 
 const Header = () => {
-  const categories = ['Technology', 'Politics', 'Sports', 'Health'];
+  const { user, logOut } = useContext(AuthContext);
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#333' }}>
@@ -14,16 +14,21 @@ const Header = () => {
         </Typography>
 
         <Box>
-          {categories.map((category) => (
-            <Button key={category} component={Link} to={`/category/${category.toLowerCase()}`} sx={{ color: 'white' }}>
-              {category}
-            </Button>
-          ))}
-          {/* --- ADD THIS BUTTON --- */}
-          <Button component={Link} to="/create" variant="outlined" sx={{ my: 1, mx: 1.5, color: 'white', borderColor: 'white' }}>
-            New Post
-          </Button>
-          {/* -------------------- */}
+          {user ? (
+            <>
+              <Button component={Link} to="/create" variant="outlined" sx={{ my: 1, mx: 1.5, color: 'white', borderColor: 'white' }}>
+                New Post
+              </Button>
+              <Button onClick={logOut} sx={{ color: 'white' }}>
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button component={Link} to="/register" sx={{ color: 'white' }}>Register</Button>
+              <Button component={Link} to="/login" sx={{ color: 'white' }}>Login</Button>
+            </>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

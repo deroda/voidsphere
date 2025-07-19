@@ -7,6 +7,8 @@ import FullArticle from './components/FullArticle';
 import CategoryView from './components/CategoryView';
 import CreateArticle from './components/CreateArticle';
 import EditArticle from './components/EditArticle';
+import Register from './components/Register';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/category/:categoryName" element={<CategoryView />} />
         <Route path="/create" element={<CreateArticle />} />
         <Route path="/article/edit/:id" element={<EditArticle />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
       <Footer />
     </Router>
