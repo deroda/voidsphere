@@ -7,16 +7,23 @@ import ArticleListItem from './ArticleListItem';
 
 const ArticleList = () => {
   const [articles, setArticles] = useState([]);
+  const [selectedTag, setSelectedTag] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/articles/')
-      .then(response => {
+    const fetchArticles = async () => {
+      try {
+        const url = selectedTag
+          ? `http://localhost:5000/articles/tag/${selectedTag}`
+          : 'http://localhost:5000/articles/';
+        const response = await axios.get(url);
         setArticles(response.data);
-      })
-      .catch(error => {
+      } catch (error) {
         console.log('There was an error fetching the articles!', error);
-      });
-  }, []);
+      }
+    };
+
+    fetchArticles();
+  }, [selectedTag]);
 
   // Slicing articles for the 3-column layout
   const featuredArticle = articles[0];
@@ -24,8 +31,20 @@ const ArticleList = () => {
   const listArticles = articles.slice(3, 7);
   const remainingArticles = articles.slice(7);
 
+  const allTags = [...new Set(articles.flatMap(article => article.tags))];
+
   return (
     <Container maxWidth="xl" sx={{ mt: 4 }}>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h6">Filter by Tag:</Typography>
+        <Button onClick={() => setSelectedTag(null)} variant={!selectedTag ? 'contained' : 'outlined'}>All</Button>
+        {allTags.map(tag => (
+          <Button key={tag} onClick={() => setSelectedTag(tag)} variant={selectedTag === tag ? 'contained' : 'outlined'} sx={{ ml: 1 }}>
+            {tag}
+          </Button>
+        ))}
+      </Box>
+
       <Grid container spacing={4} sx={{ alignItems: 'stretch' }}>
         {/* Column 1: Featured Article */}
         <Grid item xs={12} md={6}>

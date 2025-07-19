@@ -10,6 +10,7 @@ const articleSchema = new Schema({
   category: { type: String, required: true },
   publicationDate: { type: Date, default: Date.now },
   imageUrl: { type: String },
+  tags: [{ type: String }],
 }, {
   timestamps: true,
 });

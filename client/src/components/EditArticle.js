@@ -10,7 +10,8 @@ const EditArticle = () => {
     author: '',
     content: '',
     category: '',
-    imageUrl: ''
+    imageUrl: '',
+    tags: ''
   });
   const { id } = useParams();
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const EditArticle = () => {
   useEffect(() => {
     axios.get(`http://localhost:5000/articles/${id}`)
       .then(response => {
+        // If tags exist, join them into a string for the input field
+        if (response.data.tags) {
+          response.data.tags = response.data.tags.join(', ');
+        }
         setArticle(response.data);
       })
       .catch(err => {
@@ -65,6 +70,7 @@ const EditArticle = () => {
         <TextField margin="normal" required fullWidth label="Author" name="author" value={article.author} onChange={handleChange} InputProps={{ readOnly: true }} />
         <TextField margin="normal" required fullWidth label="Category" name="category" value={article.category} onChange={handleChange} />
         <TextField margin="normal" fullWidth label="Image URL" name="imageUrl" value={article.imageUrl} onChange={handleChange} />
+        <TextField margin="normal" fullWidth label="Tags (comma-separated)" name="tags" value={article.tags} onChange={handleChange} />
         <TextField margin="normal" required fullWidth label="Content" name="content" multiline rows={10} value={article.content} onChange={handleChange} />
         
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>

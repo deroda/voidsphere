@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Typography, Box, Chip } from '@mui/material';
 
 const ArticleCard = ({ article }) => {
   return (
@@ -24,6 +24,11 @@ const ArticleCard = ({ article }) => {
             {/* Displaying a short snippet of the content */}
             {article.content.substring(0, 100)}...
           </Typography>
+          <Box>
+            {article.tags && article.tags.map(tag => (
+              <Chip label={tag} key={tag} sx={{ mr: 1, mb: 1 }} />
+            ))}
+          </Box>
           <Typography variant="subtitle1" color="primary">
             Continue reading...
           </Typography>

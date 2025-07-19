@@ -9,7 +9,8 @@ const CreateArticle = () => {
     title: '',
     content: '',
     category: '',
-    imageUrl: ''
+    imageUrl: '',
+    tags: ''
   });
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -71,6 +72,14 @@ const CreateArticle = () => {
           name="imageUrl" 
           value={article.imageUrl} 
           onChange={handleChange} 
+        />
+        <TextField
+          margin="normal"
+          fullWidth
+          label="Tags (comma-separated)"
+          name="tags"
+          value={article.tags}
+          onChange={handleChange}
         />
         <TextField 
           margin="normal" 

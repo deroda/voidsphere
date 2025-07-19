@@ -13,6 +13,13 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+// Get articles by tag
+router.route('/tag/:tagName').get((req, res) => {
+  Article.find({ tags: new RegExp(req.params.tagName, 'i') })
+    .then(articles => res.json(articles))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 // Get a single article by ID
 router.route('/:id').get((req, res) => {
   Article.findById(req.params.id)
@@ -34,7 +41,7 @@ router.route('/category/:categoryName').get((req, res) => {
 // Add a new article
 router.route('/add').post(auth, async (req, res) => {
   try {
-    const { title, content, category, imageUrl } = req.body;
+    const { title, content, category, imageUrl, tags } = req.body;
     const authorInfo = await User.findById(req.user); // Find user by ID from auth middleware
 
     const newArticle = new Article({
@@ -42,7 +49,8 @@ router.route('/add').post(auth, async (req, res) => {
       content,
       category,
       imageUrl,
-      author: authorInfo.username // Automatically assign the username
+      author: authorInfo.username, // Automatically assign the username
+      tags: tags ? tags.split(',').map(tag => tag.trim()) : []
     });
 
     await newArticle.save();
@@ -61,6 +69,7 @@ router.route('/update/:id').post(auth, (req, res) => {
       article.content = req.body.content;
       article.category = req.body.category;
       article.imageUrl = req.body.imageUrl;
+      article.tags = req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : [];
 
       article.save()
         .then(() => res.json('Article updated!'))
