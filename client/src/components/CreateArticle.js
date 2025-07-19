@@ -7,7 +7,6 @@ import { Container, Typography, TextField, Button, Box } from '@mui/material';
 const CreateArticle = () => {
   const [article, setArticle] = useState({
     title: '',
-    author: '',
     content: '',
     category: '',
     imageUrl: ''
@@ -25,7 +24,7 @@ const CreateArticle = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    
     const config = {
       headers: { 'x-auth-token': token }
     };
@@ -46,12 +45,50 @@ const CreateArticle = () => {
         Create New Article
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <TextField margin="normal" required fullWidth label="Article Title" name="title" value={article.title} onChange={handleChange} autoFocus />
-        <TextField margin="normal" required fullWidth label="Author" name="author" value={article.author} onChange={handleChange} />
-        <TextField margin="normal" required fullWidth label="Category" name="category" value={article.category} onChange={handleChange} />
-        <TextField margin="normal" fullWidth label="Image URL" name="imageUrl" value={article.imageUrl} onChange={handleChange} />
-        <TextField margin="normal" required fullWidth label="Content" name="content" multiline rows={10} value={article.content} onChange={handleChange} />
-        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+        <TextField 
+          margin="normal" 
+          required 
+          fullWidth 
+          label="Article Title" 
+          name="title" 
+          value={article.title} 
+          onChange={handleChange} 
+          autoFocus 
+        />
+        <TextField 
+          margin="normal" 
+          required 
+          fullWidth 
+          label="Category" 
+          name="category" 
+          value={article.category} 
+          onChange={handleChange} 
+        />
+        <TextField 
+          margin="normal" 
+          fullWidth 
+          label="Image URL" 
+          name="imageUrl" 
+          value={article.imageUrl} 
+          onChange={handleChange} 
+        />
+        <TextField 
+          margin="normal" 
+          required 
+          fullWidth 
+          label="Content" 
+          name="content" 
+          multiline 
+          rows={10} 
+          value={article.content} 
+          onChange={handleChange} 
+        />
+        <Button 
+          type="submit" 
+          fullWidth 
+          variant="contained" 
+          sx={{ mt: 3, mb: 2 }}
+        >
           Publish Article
         </Button>
       </Box>

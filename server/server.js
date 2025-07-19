@@ -9,10 +9,7 @@ const port = process.env.PORT || 5000;
 
 // This configuration allows requests from your deployed Vercel site
 const corsOptions = {
-  origin: [
-    'http://localhost:3000', 
-    'https://voidsphere.vercel.app' // Your live Vercel URL
-  ],
+  origin: 'http://localhost:3000',
   optionsSuccessStatus: 200 
 };
 

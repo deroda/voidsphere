@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import { Container, Typography, TextField, Button, Box } from '@mui/material';
 
 const EditArticle = () => {
@@ -13,9 +14,9 @@ const EditArticle = () => {
   });
   const { id } = useParams();
   const navigate = useNavigate();
+  const { token } = useContext(AuthContext); // Get the token from our global context
 
-  // **1. FETCH EXISTING DATA**
-  // When the component loads, get the current article data from the server
+  // Fetch the existing article data when the component loads
   useEffect(() => {
     axios.get(`http://localhost:5000/articles/${id}`)
       .then(response => {
@@ -26,7 +27,6 @@ const EditArticle = () => {
       });
   }, [id]);
 
-  // Update state when user types in a field
   const handleChange = (e) => {
     const { name, value } = e.target;
     setArticle(prevState => ({
@@ -35,12 +35,17 @@ const EditArticle = () => {
     }));
   };
 
-  // **2. SUBMIT UPDATED DATA**
-  // Handle form submission
+  // Submit the updated data
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Create a config object to hold the auth header
+    const config = {
+      headers: { 'x-auth-token': token }
+    };
 
-    axios.post(`http://localhost:5000/articles/update/${id}`, article)
+    // Send the token with the update request
+    axios.post(`http://localhost:5000/articles/update/${id}`, article, config)
       .then(res => {
         console.log(res.data);
         navigate(`/article/${id}`); // Navigate back to the article page
@@ -56,13 +61,12 @@ const EditArticle = () => {
         Edit Article
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        {/* The "value" prop pre-populates the form with the fetched data */}
         <TextField margin="normal" required fullWidth label="Article Title" name="title" value={article.title} onChange={handleChange} />
-        <TextField margin="normal" required fullWidth label="Author" name="author" value={article.author} onChange={handleChange} />
+        <TextField margin="normal" required fullWidth label="Author" name="author" value={article.author} onChange={handleChange} InputProps={{ readOnly: true }} />
         <TextField margin="normal" required fullWidth label="Category" name="category" value={article.category} onChange={handleChange} />
         <TextField margin="normal" fullWidth label="Image URL" name="imageUrl" value={article.imageUrl} onChange={handleChange} />
         <TextField margin="normal" required fullWidth label="Content" name="content" multiline rows={10} value={article.content} onChange={handleChange} />
-
+        
         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
           Save Changes
         </Button>

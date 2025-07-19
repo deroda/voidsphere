@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import { Container, Typography, Box, Button, Stack } from '@mui/material';
 
 const FullArticle = () => {
   const [article, setArticle] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, token } = useContext(AuthContext); // Get user and token from context
 
   useEffect(() => {
     if (id) {
@@ -23,7 +25,10 @@ const FullArticle = () => {
   const handleDelete = () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this article?");
     if (confirmDelete) {
-      axios.delete(`http://localhost:5000/articles/${id}`)
+      const config = {
+        headers: { 'x-auth-token': token }
+      };
+      axios.delete(`http://localhost:5000/articles/${id}`, config)
         .then(res => {
           console.log(res.data);
           navigate('/');
@@ -40,22 +45,29 @@ const FullArticle = () => {
 
   return (
     <Container maxWidth="md" sx={{ my: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
         <Typography variant="h3" component="h1" gutterBottom>
           {article.title}
         </Typography>
-        <Stack direction="row" spacing={1}>
-          <Button component={Link} to={`/article/edit/${id}`} variant="contained" color="primary">
-            Edit
-          </Button>
-          <Button variant="contained" color="error" onClick={handleDelete}>
-            Delete
-          </Button>
-        </Stack>
+        
+        {/* --- Conditional Rendering Logic --- */}
+        {/* Only show buttons if a user is logged in */}
+        {user && (
+          <Stack direction="row" spacing={1}>
+            <Button component={Link} to={`/article/edit/${id}`} variant="contained" color="primary">
+              Edit
+            </Button>
+            <Button variant="contained" color="error" onClick={handleDelete}>
+              Delete
+            </Button>
+          </Stack>
+        )}
       </Box>
+
       <Typography variant="h6" color="text.secondary" paragraph>
         By {article.author}
       </Typography>
+
       <Box
         component="img"
         sx={{
