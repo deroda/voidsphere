@@ -9,7 +9,13 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+const cors = require('cors');
+
+// Allow requests from your Vercel frontend
+app.use(cors({
+    origin: "https://YOUR_VERCEL_APP_URL.vercel.app" 
+}));
+
 app.use(express.json());
 
 // --- NEW DATABASE CONNECTION CODE ---
