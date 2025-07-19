@@ -1,0 +1,12 @@
+// server/api_tests/create_article.http
+
+POST http://localhost:5000/articles/add
+Content-Type: application/json
+
+{
+  "title": "Testing the system",
+  "author": "Jane Doe",
+  "content": "This is the full text of the article about how AI is changing the world of web development. It's a long and detailed piece covering various aspects of the technology.",
+  "category": "Technology",
+  "imageUrl": "https://via.placeholder.com/600x400.png?text=AI+Revolution"
+}
